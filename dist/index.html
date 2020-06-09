@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="/style.251b6741.css">
+</head>
+
+<body>
+<div class="container">
+  <div class="row">
+      <div class="col-12">
+        <h1>COVID Charts for Central Asia and the Caucasus</h1>
+  
+        <p class="alert alert-warning">NB: This should be seen as a prototype, and design and functionality can evolve. Map and line charts not yet ready.</p>
+      </div>
+    </div>
+  <!-- <div class="row">
+  <div class="col-12">
+    <h3>Chart 1: A single line</h3>
+    <p>Draw a single line showing AAPL's stock price over a range in 2015-2016, with small dots marking each point. Use <code>AAPL.csv</code> (it's from Yahoo stock prices).</p>
+    <div id="chart-01">
+    </div>
+  </div>
+</div>
+
+  <div class="row mt-3">
+    <div class="col-12">
+      <h3>Chart 2: Multiple lines (different files)</h3>
+      <p>Use <code>alcohol-consumption.csv</code> to graph alcohol consumption over years. I want each line to be a different color, with appropriately-colored dots marking each data point.</h3>
+      <div id="chart-02">
+      </div>
+    </div>
+  </div>  <div class="row mt-3">
+    <div class="col-12">
+      <h3>Chart 3: Multiple lines (same file)</h3>
+      <p>An area graph with multiple overlapping segments, use <code>air-emissions.csv</code> to graph pollutants over years. Since they're overlapping, I'd like to be able to see through them a little (even if you can't tell). No dots.</p>
+      <div id="chart-03">
+      </div>
+    </div>
+  </div>  <div class="row mt-3">
+    <div class="col-12">
+      <h3>Chart 4: </h3>
+      <p>Draw multiple lines, with a single dot at the end of the line and some text saying which country it is.</p>
+      <p>Highlight one of the countries in a different color. Highlight its name, too.</p>
+      <p>Use <code>air-emissions.csv</code>.</p>
+      <div id="chart-04">
+      </div>
+    </div>
+  </div>  <div class="row mt-3">
+    <div class="col-12">
+      <h3>Chart 5: Multiple lines with annotations</h3>
+      <p>Create a line graph of housing prices in different sections of the United States, illustrating how prices fall in winter.</p>
+      <p>Data is in <code>housing-prices.csv</code></p>
+  
+      <div id="chart-05">
+      </div>
+    </div>
+  </div>  <div class="row mt-3">
+    <div class="col-12">
+      <h3>Chart 6: Small multiples (many, <em>many</em> multiples)</h3>
+      <p>We'll recreate <a href="https://www.reddit.com/r/dataisbeautiful/comments/3gplje/usa_vs_japan_agespecific_fertility_rates_19472010/">this</a> and <a href="http://www.randalolson.com/2015/08/23/small-multiples-vs-animated-gifs-for-showing-changes-in-fertility-rates-over-time/">this</a> using D3 and small multiples. I want each year as its own graph, with Japan and USA area graphs on top of each other and the year as a note at the top.</p>
+      <p>Data is in <code>fertility.csv</code></h3>
+      <div id="chart-06">
+      </div>
+    </div>
+  </div>  <div class="row mt-3">
+    <div class="col-12">
+        <h3>Chart 7: Smaller multiples</h3>
+        <p>Reproducing a graphic from <a href="https://www.nytimes.com/2014/04/23/upshot/the-american-middle-class-is-no-longer-the-worlds-richest.html">this Upshot article</a>.</p>
+        <p>Data is in <code>middle-class-income.csv</code> and <code>middle-class-income-usa.csv</code></p>
+      <div id="chart-07">
+      </div>
+    </div>
+  </div>  <div class="row mt-3">
+    <div class="col-12">
+      <h3>Chart 8: Small multiples painfully and manually</h3>
+      <p>Building a non-animated version of <a href="https://www.nytimes.com/interactive/2017/07/28/climate/more-frequent-extreme-summer-heat.html">this NYT visualization</a>. If you finish this one you will become the President of the Galaxy.</p>
+      <p>Data is in <code>climate-data.tsv</code></p>
+      <div id="chart-08">
+      </div>
+    </div>
+  </div>  <div class="row mt-3">
+  <div class="col-12">
+    <h3>NBA Chart: Interactive graphic</h3>
+    <div class="alert alert-warning">
+      If you find something especially hard, or your code keeps breaking, just hit undo until your graph kind of works and skip to the next part or problem.
+    </div>
+    <p>Copy the code from Chart 1, and make the graphic interactive.</p>
+    <ul>
+      <li>Hovering over a player should put a black border around their circle</li>
+      <li>Hovering over a player should display their name and team name to the right</li>
+      <li>Clicking on a button should highlight those kinds of players (you can decide what that means)</li>
+    </ul>
+  </div>
+  <div class="col-8">
+    <div id="chart-nba"></div>
+  </div>
+  <div class="col-4">
+    <p><button class="btn btn-centers btn-sm">Centers</button></p>
+    <p><button class="btn btn-pointg btn-sm">Point guards</button></p>
+    <p><button class="btn btn-20-pts btn-sm">20+ points per games</button></p>
+    <p><button class="btn btn-reset btn-sm">Reset</button></p>
+    <h3></h3>
+      <div id="player-name"></div>
+    <p></p>
+      <div id="team-name"></div>
+  </div>
+  <div class='col-12 mt-3'>
+    <div class="hints">
+      <p><strong>Hints:</strong></p>
+      <ul>
+        <li>Remember to change from <code>chart-01</code> to <code>chart-06</code></li>
+        <li>You'll want to make the graphic more narrow</li>
+        <li><code>hover</code> is <strong>not</strong> an event</li>
+        <li><code>Team</code> is the column for the team name</li>
+        <li>You'll need to edit the HTML to be able to change the 'player name' and 'team name' sections, as well as listen for clicks on the buttons.</li>
+      </ul>
+    </div>
+  </div>
+</div> -->
+  <div class="row mt-3">
+    <div class="col-12">
+      <h3>Overview of Cases and Deaths by Country</h3>
+      <p>Building a better version of <a href="https://eurasianet.org/dashboard-coronavirus-in-eurasia">this Infogram graphic</a>.</p>
+      <p>Data is in <code>all.csv</code></p>
+      <div class="col-4">
+        <p><button class="btn btn-cases btn-metric">Cases</button>
+        <button class="btn btn-deaths btn-metric">Deaths</button></p>
+      </div>
+      <div id="chart-covid1">
+      </div>
+    </div>
+    <div class="col-4">
+      <p><button class="btn btn-linear btn-scale">Linear</button>
+      <button class="btn btn-log btn-scale">Logarithmic</button></p>
+    </div>
+  </div>  <div class="row mt-3">
+    <div class="col-12">
+      <h3>Who is bending the curve?</h3>
+      <p>Case-load by days since first 100 cases.</p>
+      <p>Data is in <code>since.csv</code></p>
+      <div class="col-4">
+        <p><button class="btn btn-cases-2 btn-metric">Cases</button>
+        <button class="btn btn-deaths-2 btn-metric">Deaths</button></p>
+      </div>
+      <div id="chart-covid2">
+      </div>
+    </div>
+    <div class="col-4">
+      <p><button class="btn btn-linear-2 btn-scale">Linear</button>
+      <button class="btn btn-log-2 btn-scale">Logarithmic</button></p>
+    </div>
+  </div>  <div class="row mt-3">
+    <div class="col-12">
+      <h3>Recovered/ Active Cases</h3>
+      <p>Small multiples by country.</p>
+      <p><strong style="color:red;">Red</strong> is active.</p>
+      <p><strong style="color:cyan;">Blue</strong> is recovered.</p>
+      <p>The areas are stacked on top of each other.</p>
+      <p>Data is in <code>all.csv</code></p>
+      <div id="chart-covid3">
+      </div>
+    </div>
+  </div>  <div class="row mt-3">
+    <div class="col-12">
+      <h3>Change in daily confirmed cases.</h3>
+      <p>Using a rolling 7-day average.</p>
+      <p>New daily cases are low and flat in Georgia, Kyrgyzstan, and (so far) Uzbekistan. Armenia and Azerbaijan are still increasing; Tajikistan and Kazakhstan are ostensibly declining.</p>
+      <p>Data is in <code>since.csv</code></p>
+      <div id="chart-covid4">
+      </div>
+    </div>
+  </div>  
+  
+  <!-- <script src="scripts/chart-01.js"></script>
+  <script src="scripts/chart-02.js"></script>
+  <script src="scripts/chart-03.js"></script>
+  <script src="scripts/chart-04.js"></script>
+  <script src="scripts/chart-05.js"></script>
+  <script src="scripts/chart-06.js"></script>
+  <script src="scripts/chart-07.js"></script>
+  <script src="scripts/chart-08.js"></script>
+  <script src="scripts/chart-nba.js"></script> -->
+  <script src="/chart-covid1.cad27561.js"></script>
+  <script src="/chart-covid2.01d17197.js"></script>
+  <script src="/chart-covid3.bcb48d04.js"></script>
+  <script src="/chart-covid4.c576627c.js"></script>
+
+</div></body>
+</html>
