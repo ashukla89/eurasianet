@@ -227,6 +227,8 @@ function ready(datapoints) {
     lineDefault = logLine
     // re-render per the new defaults
     reRender(yPositionScaleDefault, lineDefault, dataDefault)
+    // make y-axis show real numbers
+    
   })
 
   // Buttons for cases/ deaths

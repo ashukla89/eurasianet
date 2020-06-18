@@ -35070,7 +35070,7 @@ function ready(datapoints) {
 
     lineDefault = logLine; // re-render per the new defaults
 
-    reRender(yPositionScaleDefault, lineDefault, dataDefault);
+    reRender(yPositionScaleDefault, lineDefault, dataDefault); // make y-axis show real numbers
   }); // Buttons for cases/ deaths
 
   d3.select('.btn-cases').on('click', function () {
