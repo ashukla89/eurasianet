@@ -5,6 +5,7 @@ import datetime as dt
 
 import time
 
+import os
 from git import Repo
 
 yesterday = dt.date.today() - dt.timedelta(days = 1)
@@ -62,8 +63,11 @@ path = 'src/data/'
 df_master.to_csv(path + 'all.csv')
 since_100.to_csv(path + 'since.csv')
 
-# push to github
+# rebuild site
+os.system("npm run build")
+print("Website rebuild step")
 
+# push to github
 # first specify directory/ repo object
 working_tree_dir = '/Users/aseemshukla/Documents/MS_Data_Journalism/Eurasianet'
 repo = Repo(working_tree_dir)
@@ -72,5 +76,5 @@ repo = Repo(working_tree_dir)
 repo.git.add(A=True)
 repo.git.commit('-m', 'daily commit')
 repo.git.push('origin', 'master')
-print("Required update to Github")
+print("Update Github step")
         
