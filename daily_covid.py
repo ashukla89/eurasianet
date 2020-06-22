@@ -5,6 +5,8 @@ import datetime as dt
 
 import time
 
+from git import Repo
+
 yesterday = dt.date.today() - dt.timedelta(days = 1)
 dates = pd.date_range(start='01-22-2020',end=yesterday)
 dates = [date.strftime("%m-%d-%Y") for date in dates]
@@ -57,6 +59,18 @@ since_100 = since_100.merge(since_100_7,on=['Country_Region','Date'])
 
 # save to csvs
 path = 'src/data/'
-
 df_master.to_csv(path + 'all.csv')
 since_100.to_csv(path + 'since.csv')
+
+# push to github
+
+# first specify directory/ repo object
+working_tree_dir = '/Users/aseemshukla/Documents/MS_Data_Journalism/Eurasianet'
+repo = Repo(working_tree_dir)
+
+# perform git activities 
+repo.git.add(A=True)
+repo.git.commit('-m', 'daily commit')
+repo.git.push('origin', 'master')
+print("Required update to Github")
+        
