@@ -34966,7 +34966,20 @@ function ready(datapoints) {
   });
   xPositionScale.domain(d3.extent(dates)); // select some defaults, to be updated by the buttons
 
-  var thisCountry = "Armenia"; ///// THE RENDER FUNCTION /////
+  var thisCountry = "Armenia"; ///// RENDER STATIC ELEMENTS /////
+  // add legend rectangles
+
+  svg.append('rect').attr('width', 15).attr('height', 15).attr('x', width + 5).attr('y', 5).attr('fill', 'cyan').attr('opacity', 0.5);
+  svg.append('rect').attr('width', 15).attr('height', 15).attr('x', width + 5).attr('y', 25).attr('fill', 'red'); // add legend text
+
+  svg.append('text').text("Recovered").attr('x', width + 25) // on the side
+  .attr('y', 5).attr('dy', 15).attr('text-anchor', 'left') // left aligned
+  .attr('font-size', 14).attr('fill', "#C8E9FE");
+  svg.append('text').text("Active").attr('x', width + 25) // on the size
+  .attr('y', 25).attr('dy', 15).attr('text-anchor', 'left') // left aligned
+  .attr('font-size', 14).attr('fill', "#C8E9FE"); // Add source text
+
+  svg.append('a').attr("xlink:href", "https://github.com/CSSEGISandData/COVID-19").append('text').attr('class', 'source-text').text("Source: COVID-19 Data Repository, Center for Systems Science and Engineering, JHU").attr('x', 0).attr('y', height + 40).attr('fill', 'cyan').attr('opacity', 0.5).style('font-size', 12).attr('text-anchor', 'left').style("pointer-events", "all"); ///// THE RENDER FUNCTION /////
 
   function reRender() {
     var thisData = datapoints.filter(function (d) {
@@ -34980,7 +34993,7 @@ function ready(datapoints) {
     console.log(thisData); // clear out previous elements
 
     svg.selectAll('path').remove();
-    svg.selectAll('text').remove();
+    svg.selectAll('.title').remove();
     svg.selectAll('.tick').remove(); // create a graph for the default country (the first)
     // Draw your areas
 
@@ -34989,21 +35002,9 @@ function ready(datapoints) {
     svg.call(tipRec);
     svg.call(tipAct); // add title
 
-    svg.append('text').text(thisCountry).attr('x', width / 2) // in the center
+    svg.append('text').text(thisCountry).attr('class', 'title').attr('x', width / 2) // in the center
     .attr('text-anchor', 'middle') // center aligned
-    .attr('dy', -10).attr('font-size', 18).attr('fill', "#C8E9FE").attr('font-weight', 'bold'); // add legend rectangles
-
-    svg.append('rect').attr('width', 15).attr('height', 15).attr('x', width + 5).attr('y', 5).attr('fill', 'cyan').attr('opacity', 0.5);
-    svg.append('rect').attr('width', 15).attr('height', 15).attr('x', width + 5).attr('y', 25).attr('fill', 'red'); // add legend text
-
-    svg.append('text').text("Recovered").attr('x', width + 25) // on the side
-    .attr('y', 5).attr('dy', 15).attr('text-anchor', 'left') // left aligned
-    .attr('font-size', 14).attr('fill', "#C8E9FE");
-    svg.append('text').text("Active").attr('x', width + 25) // on the size
-    .attr('y', 25).attr('dy', 15).attr('text-anchor', 'left') // left aligned
-    .attr('font-size', 14).attr('fill', "#C8E9FE"); // Add source text
-
-    svg.append('a').attr("xlink:href", "https://github.com/CSSEGISandData/COVID-19").append('text').attr('class', 'source-text').text("Source: COVID-19 Data Repository, Center for Systems Science and Engineering, JHU").attr('x', 0).attr('y', height + 40).attr('fill', 'cyan').attr('opacity', 0.5).style('font-size', 12).attr('text-anchor', 'left').style("pointer-events", "all"); // const mouseG = svg.append("g")
+    .attr('dy', -10).attr('font-size', 18).attr('fill', "#C8E9FE").attr('font-weight', 'bold'); // const mouseG = svg.append("g")
     //   .attr("class", "mouse-over-effects")
     // mouseG.append("path") // this is the black vertical line to follow mouse
     //   .attr("class", "mouse-line")
