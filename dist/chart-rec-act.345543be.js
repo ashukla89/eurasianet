@@ -34979,7 +34979,9 @@ function ready(datapoints) {
   .attr('y', 25).attr('dy', 15).attr('text-anchor', 'left') // left aligned
   .attr('font-size', 14).attr('fill', "#C8E9FE"); // Add source text
 
-  svg.append('a').attr("xlink:href", "https://github.com/CSSEGISandData/COVID-19").append('text').attr('class', 'source-text').text("Source: COVID-19 Data Repository, Center for Systems Science and Engineering, JHU").attr('x', 0).attr('y', height + 40).attr('fill', 'cyan').attr('opacity', 0.5).style('font-size', 12).attr('text-anchor', 'left').style("pointer-events", "all"); ///// THE RENDER FUNCTION /////
+  svg.append('a') // .attr("xlink:href", "https://github.com/CSSEGISandData/COVID-19")
+  .append('text').attr('class', 'source-text').text("Source: COVID-19 Data Repository, Center for Systems Science and Engineering, JHU").attr('x', 0).attr('y', height + 40).attr('fill', 'cyan').attr('opacity', 0.5).style('font-size', 12).attr('text-anchor', 'left'); // .style("pointer-events", "all")
+  ///// THE RENDER FUNCTION /////
 
   function reRender() {
     var thisData = datapoints.filter(function (d) {

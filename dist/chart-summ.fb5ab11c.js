@@ -35102,7 +35102,9 @@ function ready(_ref) {
     return lineDefault(d.values);
   }).attr('opacity', 1); // Add source text
 
-  svg.append('a').attr("xlink:href", "https://github.com/CSSEGISandData/COVID-19").append('text').attr('class', 'source-text').text("Source: COVID-19 Data Repository, Center for Systems Science and Engineering, JHU").attr('x', 0).attr('y', height + 40).attr('fill', 'cyan').attr('opacity', 0.5).style('font-size', 12).attr('text-anchor', 'left').style("pointer-events", "all"); // define a function that updates dataDefault based on prevailing conditions
+  svg.append('a') // .attr("xlink:href", "https://github.com/CSSEGISandData/COVID-19")
+  .append('text').attr('class', 'source-text').text("Source: COVID-19 Data Repository, Center for Systems Science and Engineering, JHU").attr('x', 0).attr('y', height + 40).attr('fill', 'cyan').attr('opacity', 0.5).style('font-size', 12).attr('text-anchor', 'left'); // .style("pointer-events", "all")
+  // define a function that updates dataDefault based on prevailing conditions
 
   function defineData(metric, time) {
     if (time === "dates") {

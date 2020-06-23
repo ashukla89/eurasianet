@@ -242,7 +242,7 @@ function ready([dataDate, dataSince]) {
   // Add source text
   svg
     .append('a')
-    .attr("xlink:href", "https://github.com/CSSEGISandData/COVID-19")
+    // .attr("xlink:href", "https://github.com/CSSEGISandData/COVID-19")
     .append('text')
     .attr('class','source-text')
     .text("Source: COVID-19 Data Repository, Center for Systems Science and Engineering, JHU")
@@ -252,7 +252,7 @@ function ready([dataDate, dataSince]) {
     .attr('opacity', 0.5)
     .style('font-size', 12)
     .attr('text-anchor', 'left')
-    .style("pointer-events", "all")
+    // .style("pointer-events", "all")
 
   // define a function that updates dataDefault based on prevailing conditions
   function defineData(metric, time) {
