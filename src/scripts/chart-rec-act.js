@@ -5,7 +5,7 @@ import d3Annotation from 'd3-svg-annotation'
 d3.tip = d3Tip
 
 // Create your margins and height/width
-const margin = { top: 30, left: 50, right: 100, bottom: 50 }
+const margin = { top: 30, left: 50, right: 100, bottom: 60 }
 const height = 400 - margin.top - margin.bottom
 const width = 600 - margin.left - margin.right
 

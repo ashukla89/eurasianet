@@ -34916,7 +34916,7 @@ var margin = {
   top: 30,
   left: 50,
   right: 100,
-  bottom: 50
+  bottom: 60
 };
 var height = 400 - margin.top - margin.bottom;
 var width = 600 - margin.left - margin.right; // I'll give you this part!
