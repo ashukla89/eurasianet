@@ -4,8 +4,8 @@ import d3Annotation from 'd3-svg-annotation'
 
 d3.tip = d3Tip
 
-const margin = { top: 30, left: 50, right: 30, bottom: 30 }
-const height = 400 - margin.top - margin.bottom
+const margin = { top: 30, left: 50, right: 30, bottom: 60 }
+const height = 450 - margin.top - margin.bottom
 const width = 600 - margin.left - margin.right
 
 console.log('Building Combined Chart')
@@ -238,6 +238,21 @@ function ready([dataDate, dataSince]) {
     .attr('stroke', d => colorScale(d.key))
     .attr('d', d => lineDefault(d.values))
     .attr('opacity', 1)
+  
+  // Add source text
+  svg
+    .append('a')
+    .attr("xlink:href", "https://github.com/CSSEGISandData/COVID-19")
+    .append('text')
+    .attr('class','source-text')
+    .text("Source: COVID-19 Data Repository, Center for Systems Science and Engineering, JHU")
+    .attr('x', 0)
+    .attr('y', height + 40)
+    .attr('fill', 'cyan')
+    .attr('opacity', 0.5)
+    .style('font-size', 12)
+    .attr('text-anchor', 'left')
+    .style("pointer-events", "all")
 
   // define a function that updates dataDefault based on prevailing conditions
   function defineData(metric, time) {

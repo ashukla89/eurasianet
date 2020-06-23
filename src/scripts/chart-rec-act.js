@@ -5,7 +5,7 @@ import d3Annotation from 'd3-svg-annotation'
 d3.tip = d3Tip
 
 // Create your margins and height/width
-const margin = { top: 30, left: 50, right: 100, bottom: 30 }
+const margin = { top: 30, left: 50, right: 100, bottom: 50 }
 const height = 400 - margin.top - margin.bottom
 const width = 600 - margin.left - margin.right
 
@@ -186,6 +186,21 @@ function ready(datapoints) {
       .attr('text-anchor', 'left') // left aligned
       .attr('font-size', 14)
       .attr('fill', "#C8E9FE")
+
+      // Add source text
+    svg
+      .append('a')
+      .attr("xlink:href", "https://github.com/CSSEGISandData/COVID-19")
+      .append('text')
+      .attr('class','source-text')
+      .text("Source: COVID-19 Data Repository, Center for Systems Science and Engineering, JHU")
+      .attr('x', 0)
+      .attr('y', height + 40)
+      .attr('fill', 'cyan')
+      .attr('opacity', 0.5)
+      .style('font-size', 12)
+      .attr('text-anchor', 'left')
+      .style("pointer-events", "all")
 
     // const mouseG = svg.append("g")
     //   .attr("class", "mouse-over-effects")

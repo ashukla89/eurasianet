@@ -34916,7 +34916,7 @@ var margin = {
   top: 30,
   left: 50,
   right: 100,
-  bottom: 30
+  bottom: 50
 };
 var height = 400 - margin.top - margin.bottom;
 var width = 600 - margin.left - margin.right; // I'll give you this part!
@@ -35001,7 +35001,9 @@ function ready(datapoints) {
     .attr('font-size', 14).attr('fill', "#C8E9FE");
     svg.append('text').text("Active").attr('x', width + 25) // on the size
     .attr('y', 25).attr('dy', 15).attr('text-anchor', 'left') // left aligned
-    .attr('font-size', 14).attr('fill', "#C8E9FE"); // const mouseG = svg.append("g")
+    .attr('font-size', 14).attr('fill', "#C8E9FE"); // Add source text
+
+    svg.append('a').attr("xlink:href", "https://github.com/CSSEGISandData/COVID-19").append('text').attr('class', 'source-text').text("Source: COVID-19 Data Repository, Center for Systems Science and Engineering, JHU").attr('x', 0).attr('y', height + 40).attr('fill', 'cyan').attr('opacity', 0.5).style('font-size', 12).attr('text-anchor', 'left').style("pointer-events", "all"); // const mouseG = svg.append("g")
     //   .attr("class", "mouse-over-effects")
     // mouseG.append("path") // this is the black vertical line to follow mouse
     //   .attr("class", "mouse-line")

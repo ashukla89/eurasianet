@@ -34929,9 +34929,9 @@ var margin = {
   top: 30,
   left: 50,
   right: 30,
-  bottom: 30
+  bottom: 60
 };
-var height = 400 - margin.top - margin.bottom;
+var height = 450 - margin.top - margin.bottom;
 var width = 600 - margin.left - margin.right;
 console.log('Building Combined Chart');
 var svg = d3.select('#chart-summ').append('svg').attr('height', height + margin.top + margin.bottom).attr('width', width + margin.left + margin.right).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')'); // add clip-path so paths don't go outside axes
@@ -35100,7 +35100,9 @@ function ready(_ref) {
     return colorScale(d.key);
   }).attr('d', function (d) {
     return lineDefault(d.values);
-  }).attr('opacity', 1); // define a function that updates dataDefault based on prevailing conditions
+  }).attr('opacity', 1); // Add source text
+
+  svg.append('a').attr("xlink:href", "https://github.com/CSSEGISandData/COVID-19").append('text').attr('class', 'source-text').text("Source: COVID-19 Data Repository, Center for Systems Science and Engineering, JHU").attr('x', 0).attr('y', height + 40).attr('fill', 'cyan').attr('opacity', 0.5).style('font-size', 12).attr('text-anchor', 'left').style("pointer-events", "all"); // define a function that updates dataDefault based on prevailing conditions
 
   function defineData(metric, time) {
     if (time === "dates") {
