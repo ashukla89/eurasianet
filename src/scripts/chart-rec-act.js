@@ -205,90 +205,94 @@ function ready(datapoints) {
       .attr('fill', "#C8E9FE")
       .attr('font-weight', 'bold')
 
-    // const mouseG = svg.append("g")
-    //   .attr("class", "mouse-over-effects")
+    const mouseG = svg.append("g")
+      .attr("class", "mouse-over-effects")
 
-    // mouseG.append("path") // this is the black vertical line to follow mouse
-    //   .attr("class", "mouse-line")
-    //   .style("stroke", "black")
-    //   .style("stroke-width", "1px")
-    //   .style("opacity", "0")
+    mouseG.append("path") // this is the black vertical line to follow mouse
+      .attr("class", "mouse-line")
+      .style("stroke", "#C8E9FE")
+      .style("stroke-width", "1px")
+      .style("opacity", "0")
 
-    // const mousePerLine = mouseG.selectAll('.mouse-per-line')
-    //   .data(thisCountry)
-    //   .enter()
-    //   .append("g")
-    //   .attr("class", "mouse-per-line");
+    const lines = document.getElementsByClassName('line')
 
-    // mousePerLine.append("circle")
-    //   .attr("r", 8)
-    //   .style("stroke", "grey")
-    //   .style("fill", "none")
-    //   .style("stroke-width", "1px")
-    //   .style("opacity", "0")
+    const mousePerLine = mouseG.selectAll('.mouse-per-line')
+      .data(thisCountry)
+      .enter()
+      .append("g")
+      .attr("class", "mouse-per-line");
 
-    // mousePerLine.append("text")
-    //   .attr("transform", "translate(10,3)");
+    mousePerLine.append("circle")
+      .attr('r', 6)
+      .attr('opacity', 0)
+      .attr('fill', 'white')
+      .attr('stroke', 'grey')
+      .attr('stroke-width', 2)
 
-    // mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
-    //   .attr('width', width) // can't catch mouse events on a g element
-    //   .attr('height', height)
-    //   .attr('fill', 'none')
-    //   .attr('pointer-events', 'all')
-    //   .on('mouseout', function() { // on mouse out hide line, circles and text
-    //     d3.select(".mouse-line")
-    //       .style("opacity", "0");
-    //     d3.selectAll(".mouse-per-line circle")
-    //       .style("opacity", "0");
-    //     d3.selectAll(".mouse-per-line text")
-    //       .style("opacity", "0");
-    //   })
-    //   .on('mouseover', function() { // on mouse in show line, circles and text
-    //     d3.select(".mouse-line")
-    //       .style("opacity", "1");
-    //     d3.selectAll(".mouse-per-line circle")
-    //       .style("opacity", "1");
-    //     d3.selectAll(".mouse-per-line text")
-    //       .style("opacity", "1");
-    //   })
-    //   .on('mousemove', function() { // mouse moving over canvas
-    //     const mouse = d3.mouse(this);
-    //     d3.select(".mouse-line")
-    //       .attr("d", function() {
-    //         console.log(mouse)
-    //         const d = "M" + mouse[0] + "," + height;
-    //         d += " " + mouse[0] + "," + 0;
-    //         return d;
-    //       });
+    mousePerLine.append("text")
+      .attr("transform", "translate(10,3)");
 
-    //       d3.selectAll(".mouse-per-line")
-    //         .attr("transform", function(d, i) {
-    //           console.log(width/mouse[0])
-    //           var xDate = x.invert(mouse[0]),
-    //               bisect = d3.bisector(function(d) { return d.datetime; }).right;
-    //               idx = bisect(d.values, xDate);
+    mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
+      .attr('width', width) // can't catch mouse events on a g element
+      .attr('height', height)
+      .attr('fill', 'none')
+      .attr('pointer-events', 'all')
+      .on('mouseout', function() { // on mouse out hide line, circles and text
+        d3.select(".mouse-line")
+          .style("opacity", "0");
+        d3.selectAll(".mouse-per-line circle")
+          .style("opacity", "0");
+        d3.selectAll(".mouse-per-line text")
+          .style("opacity", "0");
+        // tip.hide(this)
+      })
+      .on('mouseover', function() { // on mouse in show line, circles and text
+        d3.select(".mouse-line")
+          .style("opacity", "1");
+        d3.selectAll(".mouse-per-line circle")
+          .style("opacity", "1");
+        d3.selectAll(".mouse-per-line text")
+          .style("opacity", "1");
+      })
+      .on('mousemove', function(f) { // mouse moving over canvas
+        let mouse = d3.mouse(this);
+        d3.select(".mouse-line")
+          .attr("d", function() {
+            let d = "M" + mouse[0] + "," + height;
+            d += " " + mouse[0] + "," + 0;
+            console.log(d)
+            return d;
+          })
+
+          d3.selectAll(".mouse-per-line")
+            .attr("transform", function(d, i) {
+              // console.log(width/mouse[0])
+              let xDate = xPositionScale.invert(mouse[0]) // gives the date associated with the position value
+              console.log("date", xDate)
+              //     bisect = d3.bisector(function(d) { return d.datetime; }).right;
+              //     idx = bisect(d.values, xDate);
               
-    //           var beginning = 0,
-    //               end = lines[i].getTotalLength(),
-    //               target = null;
+              // let beginning = 0,
+              //     end = lines[i].getTotalLength(),
+              //     target = null;
 
-    //           while (true){
-    //             target = Math.floor((beginning + end) / 2);
-    //             pos = lines[i].getPointAtLength(target);
-    //             if ((target === end || target === beginning) && pos.x !== mouse[0]) {
-    //                 break;
-    //             }
-    //             if (pos.x > mouse[0])      end = target;
-    //             else if (pos.x < mouse[0]) beginning = target;
-    //             else break; //position found
-    //           }
+              // while (true){
+              //   target = Math.floor((beginning + end) / 2);
+              //   pos = lines[i].getPointAtLength(target);
+              //   if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+              //       break;
+              //   }
+              //   if (pos.x > mouse[0])      end = target;
+              //   else if (pos.x < mouse[0]) beginning = target;
+              //   else break; //position found
+              // }
             
-    //           d3.select(this).select('text')
-    //             .text(y.invert(pos.y).toFixed(2));
+              // d3.select(this).select('text')
+              //   .text(yPositionScale.invert(pos.y).toFixed(2));
               
-    //           return "translate(" + mouse[0] + "," + pos.y +")";
-    //         })
-    //   })
+              // return "translate(" + mouse[0] + "," + pos.y +")";
+            })
+      })
 
     const xAxis = d3
       .axisBottom(xPositionScale)
