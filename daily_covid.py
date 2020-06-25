@@ -63,18 +63,41 @@ path = 'src/data/'
 df_master.to_csv(path + 'all.csv')
 since_100.to_csv(path + 'since.csv')
 
-# rebuild site
-os.system("npm run build")
-print("Website rebuild step")
+import boto3
+from botocore.exceptions import NoCredentialsError
 
-# push to github
-# first specify directory/ repo object
-working_tree_dir = '/Users/aseemshukla/Documents/MS_Data_Journalism/Eurasianet'
-repo = Repo(working_tree_dir)
+def upload_to_aws(local_file, bucket, s3_file):
+    s3 = boto3.client('s3')
 
-# perform git activities 
-repo.git.add(A=True)
-repo.git.commit('-m', 'daily commit')
-repo.git.push('origin', 'master')
-print("Update Github step")
+    try:
+        s3.upload_file(local_file, bucket, s3_file)
+        print("Upload Successful")
+        return True
+    except FileNotFoundError:
+        print("The file was not found")
+        return False
+    except NoCredentialsError:
+        print("Credentials not available")
+        return False
+
+
+uploaded_all = upload_to_aws('src/data/all.csv', 'eurasianet', 'all.csv')
+uploaded_since = upload_to_aws('src/data/siince.csv', 'eurasianet', 'since.csv')
+
+# deprecated for site build
+
+# # rebuild site
+# os.system("npm run build")
+# print("Website rebuild step")
+
+# # push to github
+# # first specify directory/ repo object
+# working_tree_dir = '/Users/aseemshukla/Documents/MS_Data_Journalism/Eurasianet'
+# repo = Repo(working_tree_dir)
+
+# # perform git activities 
+# repo.git.add(A=True)
+# repo.git.commit('-m', 'daily commit')
+# repo.git.push('origin', 'master')
+# print("Update Github step")
         
