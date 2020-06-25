@@ -34999,33 +34999,50 @@ function ready(datapoints) {
     svg.selectAll('.tick').remove(); // create a graph for the default country (the first)
     // Draw your areas
 
-    svg.append('path').datum(thisData).transition().duration(500).attr('d', areaRec).attr("clip-path", "url(#clip)").attr('fill', 'cyan').attr('stroke', 'grey').attr('stroke-width', 1).attr('opacity', 0.5);
-    svg.append('path').datum(thisData).raise().transition().duration(500).attr("clip-path", "url(#clip)").attr('fill', 'red').attr('stroke', 'grey').attr('stroke-width', 1).attr('opacity', 1).attr('d', areaAct);
+    svg.append('path').datum(thisData).transition().duration(500).attr('d', areaRec).attr('class', 'area').attr("clip-path", "url(#clip)").attr('fill', 'cyan').attr('stroke', 'grey').attr('stroke-width', 1).attr('opacity', 0.5);
+    svg.append('path').datum(thisData).raise().transition().duration(500).attr('class', 'area').attr("clip-path", "url(#clip)").attr('fill', 'red').attr('stroke', 'grey').attr('stroke-width', 1).attr('opacity', 1).attr('d', areaAct);
     svg.call(tipRec);
     svg.call(tipAct); // add title
 
     svg.append('text').text(thisCountry).attr('class', 'title').attr('x', width / 2) // in the center
     .attr('text-anchor', 'middle') // center aligned
-    .attr('dy', -10).attr('font-size', 18).attr('fill', "#C8E9FE").attr('font-weight', 'bold');
+    .attr('dy', -10).attr('font-size', 18).attr('fill', "#C8E9FE").attr('font-weight', 'bold'); ///// MOUSE-OVER SECTION /////
+    ///// (Code from https://bl.ocks.org/larsenmtl/e3b8b7c2ca4787f77d78f58d41c3da91) /////
+    // array of metrics we care about
+
+    var metrics = ['Active', 'Recovered']; // restructure data for mouse object
+
+    var recActData = metrics.map(function (metric) {
+      return {
+        metric: metric,
+        values: thisData.map(function (d) {
+          return {
+            datetime: d.datetime,
+            metric: +d[metric]
+          };
+        })
+      };
+    });
     var mouseG = svg.append("g").attr("class", "mouse-over-effects");
     mouseG.append("path") // this is the black vertical line to follow mouse
     .attr("class", "mouse-line").style("stroke", "#C8E9FE").style("stroke-width", "1px").style("opacity", "0");
-    var lines = document.getElementsByClassName('line');
-    var mousePerLine = mouseG.selectAll('.mouse-per-line').data(thisCountry).enter().append("g").attr("class", "mouse-per-line");
-    mousePerLine.append("circle").attr('r', 6).attr('opacity', 0).attr('fill', 'white').attr('stroke', 'grey').attr('stroke-width', 2);
-    mousePerLine.append("text").attr("transform", "translate(10,3)");
+    var areas = document.getElementsByClassName('area');
+    console.log(areas);
+    var mousePerArea = mouseG.selectAll('.mouse-per-line').data(recActData).enter().append("g").attr("class", "mouse-per-line");
+    mousePerArea.append("circle").attr('r', 6).attr('opacity', 0).attr('fill', 'white').attr('stroke', 'grey').attr('stroke-width', 2);
+    mousePerArea.append("text").attr("transform", "translate(10,3)");
     mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
     .attr('width', width) // can't catch mouse events on a g element
     .attr('height', height).attr('fill', 'none').attr('pointer-events', 'all').on('mouseout', function () {
       // on mouse out hide line, circles and text
       d3.select(".mouse-line").style("opacity", "0");
-      d3.selectAll(".mouse-per-line circle").style("opacity", "0");
-      d3.selectAll(".mouse-per-line text").style("opacity", "0"); // tip.hide(this)
+      d3.selectAll(".mouse-per-area circle").style("opacity", "0");
+      d3.selectAll(".mouse-per-area text").style("opacity", "0"); // tip.hide(this)
     }).on('mouseover', function () {
       // on mouse in show line, circles and text
       d3.select(".mouse-line").style("opacity", "1");
-      d3.selectAll(".mouse-per-line circle").style("opacity", "1");
-      d3.selectAll(".mouse-per-line text").style("opacity", "1");
+      d3.selectAll(".mouse-per-area circle").style("opacity", "1");
+      d3.selectAll(".mouse-per-area text").style("opacity", "1");
     }).on('mousemove', function (f) {
       // mouse moving over canvas
       var mouse = d3.mouse(this);
@@ -35035,28 +35052,34 @@ function ready(datapoints) {
         console.log(d);
         return d;
       });
-      d3.selectAll(".mouse-per-line").attr("transform", function (d, i) {
+      d3.selectAll(".mouse-per-area").attr("transform", function (d, i) {
         // console.log(width/mouse[0])
-        var xDate = xPositionScale.invert(mouse[0]); // gives the date associated with the position value
+        var xDate = xPositionScale.invert(mouse[0]),
+            // gives the date associated with the position value
+        bisect = d3.bisector(function (d) {
+          return d.datetime;
+        }).right,
+            idx = bisect(d.values, xDate);
+        console.log("date", xDate);
+        console.log("d.values", d.values);
+        console.log("idx", idx);
+        var beginning = 0,
+            end = areas[i].getTotalLength(),
+            target = null;
 
-        console.log("date", xDate); //     bisect = d3.bisector(function(d) { return d.datetime; }).right;
-        //     idx = bisect(d.values, xDate);
-        // let beginning = 0,
-        //     end = lines[i].getTotalLength(),
-        //     target = null;
-        // while (true){
-        //   target = Math.floor((beginning + end) / 2);
-        //   pos = lines[i].getPointAtLength(target);
-        //   if ((target === end || target === beginning) && pos.x !== mouse[0]) {
-        //       break;
-        //   }
-        //   if (pos.x > mouse[0])      end = target;
-        //   else if (pos.x < mouse[0]) beginning = target;
-        //   else break; //position found
-        // }
-        // d3.select(this).select('text')
-        //   .text(yPositionScale.invert(pos.y).toFixed(2));
-        // return "translate(" + mouse[0] + "," + pos.y +")";
+        while (true) {
+          target = Math.floor((beginning + end) / 2);
+          pos = areas[i].getPointAtLength(target);
+
+          if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+            break;
+          }
+
+          if (pos.x > mouse[0]) end = target;else if (pos.x < mouse[0]) beginning = target;else break; //position found
+        }
+
+        d3.select(this).select('text').text(yPositionScale.invert(pos.y).toFixed(2));
+        return "translate(" + mouse[0] + "," + pos.y + ")";
       });
     });
     var xAxis = d3.axisBottom(xPositionScale).ticks(8).tickFormat(d3.timeFormat('%m/%d')); // .tickSize(-height)

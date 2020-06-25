@@ -172,6 +172,7 @@ function ready(datapoints) {
       .datum(thisData)
       .transition().duration(500)
       .attr('d', areaRec)
+      .attr('class', 'area')
       .attr("clip-path", "url(#clip)")
       .attr('fill', 'cyan')
       .attr('stroke', 'grey')
@@ -183,6 +184,7 @@ function ready(datapoints) {
       .datum(thisData)
       .raise()
       .transition().duration(500)
+      .attr('class', 'area')
       .attr("clip-path", "url(#clip)")
       .attr('fill', 'red')
       .attr('stroke', 'grey')
@@ -205,6 +207,25 @@ function ready(datapoints) {
       .attr('fill', "#C8E9FE")
       .attr('font-weight', 'bold')
 
+    ///// MOUSE-OVER SECTION /////
+    ///// (Code from https://bl.ocks.org/larsenmtl/e3b8b7c2ca4787f77d78f58d41c3da91) /////
+
+    // array of metrics we care about
+    const metrics = ['Active','Recovered']
+
+    // restructure data for mouse object
+    var recActData = metrics.map(function(metric) {
+      return {
+        metric: metric,
+        values: thisData.map(function(d) {
+          return {
+            datetime: d.datetime,
+            metric: +d[metric]
+          };
+        })
+      };
+    });
+
     const mouseG = svg.append("g")
       .attr("class", "mouse-over-effects")
 
@@ -214,22 +235,24 @@ function ready(datapoints) {
       .style("stroke-width", "1px")
       .style("opacity", "0")
 
-    const lines = document.getElementsByClassName('line')
+    const areas = document.getElementsByClassName('area')
 
-    const mousePerLine = mouseG.selectAll('.mouse-per-line')
-      .data(thisCountry)
+    console.log(areas)
+
+    const mousePerArea = mouseG.selectAll('.mouse-per-line')
+      .data(recActData)
       .enter()
       .append("g")
       .attr("class", "mouse-per-line");
 
-    mousePerLine.append("circle")
+    mousePerArea.append("circle")
       .attr('r', 6)
       .attr('opacity', 0)
       .attr('fill', 'white')
       .attr('stroke', 'grey')
       .attr('stroke-width', 2)
 
-    mousePerLine.append("text")
+    mousePerArea.append("text")
       .attr("transform", "translate(10,3)");
 
     mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
@@ -240,18 +263,18 @@ function ready(datapoints) {
       .on('mouseout', function() { // on mouse out hide line, circles and text
         d3.select(".mouse-line")
           .style("opacity", "0");
-        d3.selectAll(".mouse-per-line circle")
+        d3.selectAll(".mouse-per-area circle")
           .style("opacity", "0");
-        d3.selectAll(".mouse-per-line text")
+        d3.selectAll(".mouse-per-area text")
           .style("opacity", "0");
         // tip.hide(this)
       })
       .on('mouseover', function() { // on mouse in show line, circles and text
         d3.select(".mouse-line")
           .style("opacity", "1");
-        d3.selectAll(".mouse-per-line circle")
+        d3.selectAll(".mouse-per-area circle")
           .style("opacity", "1");
-        d3.selectAll(".mouse-per-line text")
+        d3.selectAll(".mouse-per-area text")
           .style("opacity", "1");
       })
       .on('mousemove', function(f) { // mouse moving over canvas
@@ -264,33 +287,36 @@ function ready(datapoints) {
             return d;
           })
 
-          d3.selectAll(".mouse-per-line")
+          d3.selectAll(".mouse-per-area")
             .attr("transform", function(d, i) {
               // console.log(width/mouse[0])
-              let xDate = xPositionScale.invert(mouse[0]) // gives the date associated with the position value
-              console.log("date", xDate)
-              //     bisect = d3.bisector(function(d) { return d.datetime; }).right;
-              //     idx = bisect(d.values, xDate);
-              
-              // let beginning = 0,
-              //     end = lines[i].getTotalLength(),
-              //     target = null;
+              let xDate = xPositionScale.invert(mouse[0]), // gives the date associated with the position value
+                  bisect = d3.bisector(function(d) { return d.datetime; }).right,
+                  idx = bisect(d.values, xDate);
 
-              // while (true){
-              //   target = Math.floor((beginning + end) / 2);
-              //   pos = lines[i].getPointAtLength(target);
-              //   if ((target === end || target === beginning) && pos.x !== mouse[0]) {
-              //       break;
-              //   }
-              //   if (pos.x > mouse[0])      end = target;
-              //   else if (pos.x < mouse[0]) beginning = target;
-              //   else break; //position found
-              // }
-            
-              // d3.select(this).select('text')
-              //   .text(yPositionScale.invert(pos.y).toFixed(2));
+              console.log("date", xDate)
+              console.log("d.values", d.values)
+              console.log("idx", idx)
               
-              // return "translate(" + mouse[0] + "," + pos.y +")";
+              let beginning = 0,
+                  end = areas[i].getTotalLength(),
+                  target = null;
+
+              while (true){
+                target = Math.floor((beginning + end) / 2);
+                pos = areas[i].getPointAtLength(target);
+                if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+                    break;
+                }
+                if (pos.x > mouse[0])      end = target;
+                else if (pos.x < mouse[0]) beginning = target;
+                else break; //position found
+              }
+            
+              d3.select(this).select('text')
+                .text(yPositionScale.invert(pos.y).toFixed(2));
+              
+              return "translate(" + mouse[0] + "," + pos.y +")";
             })
       })
 
