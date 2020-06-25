@@ -82,7 +82,7 @@ def upload_to_aws(local_file, bucket, s3_file):
 
 
 uploaded_all = upload_to_aws('src/data/all.csv', 'eurasianet', 'all.csv')
-uploaded_since = upload_to_aws('src/data/siince.csv', 'eurasianet', 'since.csv')
+uploaded_since = upload_to_aws('src/data/since.csv', 'eurasianet', 'since.csv')
 
 # deprecated for site build
 
