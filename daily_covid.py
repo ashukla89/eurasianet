@@ -8,7 +8,7 @@ import time
 import os
 from git import Repo
 
-yesterday = dt.date.today() - dt.timedelta(days = 2)
+yesterday = dt.date.today() - dt.timedelta(days = 1)
 dates = pd.date_range(start='01-22-2020',end=yesterday)
 dates = [date.strftime("%m-%d-%Y") for date in dates]
 
