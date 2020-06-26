@@ -68,7 +68,7 @@ const tipAct = d3
   })
 
 // Read in your data
-d3.csv(require('../data/all.csv'))
+d3.csv('https://eurasianet.s3.us-east-2.amazonaws.com/all.csv')
   .then(ready)
   .catch(err => {
     console.log(err)
@@ -236,8 +236,6 @@ function ready(datapoints) {
       .style("opacity", "0")
 
     const areas = document.getElementsByClassName('area')
-
-    console.log(areas)
 
     const mousePerArea = mouseG.selectAll('.mouse-per-line')
       .data(recActData)

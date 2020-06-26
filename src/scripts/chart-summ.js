@@ -97,8 +97,8 @@ svg.call(tip)
 
 // Read in your data
 Promise.all([
-    d3.csv(require('../data/all.csv')),
-    d3.csv(require('../data/since.csv'))
+    d3.csv('https://eurasianet.s3.us-east-2.amazonaws.com/all.csv'),
+    d3.csv('https://eurasianet.s3.us-east-2.amazonaws.com/since.csv')
   ]).then(ready)
   .catch(err => {
     console.log(err)
