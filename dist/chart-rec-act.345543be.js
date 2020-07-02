@@ -34893,7 +34893,9 @@ var index = {
 };
 var _default = index;
 exports.default = _default;
-},{"d3-selection":"../node_modules/d3-svg-annotation/node_modules/d3-selection/src/index.js","d3-drag":"../node_modules/d3-svg-annotation/node_modules/d3-drag/src/index.js","d3-shape":"../node_modules/d3-svg-annotation/node_modules/d3-shape/index.js","d3-dispatch":"../node_modules/d3-svg-annotation/node_modules/d3-dispatch/index.js"}],"scripts/chart-rec-act.js":[function(require,module,exports) {
+},{"d3-selection":"../node_modules/d3-svg-annotation/node_modules/d3-selection/src/index.js","d3-drag":"../node_modules/d3-svg-annotation/node_modules/d3-drag/src/index.js","d3-shape":"../node_modules/d3-svg-annotation/node_modules/d3-shape/index.js","d3-dispatch":"../node_modules/d3-svg-annotation/node_modules/d3-dispatch/index.js"}],"data/all.csv":[function(require,module,exports) {
+module.exports = "/all.70a381c5.csv";
+},{}],"scripts/chart-rec-act.js":[function(require,module,exports) {
 "use strict";
 
 var d3 = _interopRequireWildcard(require("d3"));
@@ -34939,14 +34941,13 @@ var areaAct = d3.area().x(function (d) {
 }).y0(height).y1(function (d) {
   return yPositionScale(+d.Active);
 });
-var tipRec = d3.tip().attr('class', 'd3-tip').offset([0, -10]).html(function (d) {
-  return "<strong>".concat(d.Country_Region, "</strong><br>\n    ").concat(d3.timeFormat("%B %d")(d.datetime), ": <span style='color:red'>").concat(Math.round(d.Recovered), "</span>");
+var tip = d3.tip().attr('class', 'd3-tip').offset([0, -10]).html(function (d) {
+  return "<strong>".concat(d3.timeFormat("%B %d")(d.datetime), "</strong><br>\n    Recovered: ").concat(d3.format(",")(Math.round(d.Recovered)), "<br>\n    Active: ").concat(d3.format(",")(Math.round(d.Active)));
 });
-var tipAct = d3.tip().attr('class', 'd3-tip').offset([0, -10]).html(function (d) {
-  return "<strong>".concat(d.Country_Region, "</strong><br>\n    ").concat(d3.timeFormat("%B %d")(d.datetime), ": <span style='color:red'>").concat(Math.round(d.Active), "</span>");
-}); // Read in your data
+svg.call(tip); // Read in your data
+// d3.csv('https://eurasianet.s3.us-east-2.amazonaws.com/all.csv')
 
-d3.csv('https://eurasianet.s3.us-east-2.amazonaws.com/all.csv').then(ready).catch(function (err) {
+d3.csv(require('../data/all.csv')).then(ready).catch(function (err) {
   console.log(err);
 }); // Create your ready function
 
@@ -34998,9 +34999,7 @@ function ready(datapoints) {
     // Draw your areas
 
     svg.append('path').datum(thisData).transition().duration(500).attr('d', areaRec).attr('class', 'area').attr("clip-path", "url(#clip)").attr('fill', 'cyan').attr('stroke', 'grey').attr('stroke-width', 1).attr('opacity', 0.5);
-    svg.append('path').datum(thisData).raise().transition().duration(500).attr('class', 'area').attr("clip-path", "url(#clip)").attr('fill', 'red').attr('stroke', 'grey').attr('stroke-width', 1).attr('opacity', 1).attr('d', areaAct);
-    svg.call(tipRec);
-    svg.call(tipAct); // add title
+    svg.append('path').datum(thisData).raise().transition().duration(500).attr('class', 'area').attr("clip-path", "url(#clip)").attr('fill', 'red').attr('stroke', 'grey').attr('stroke-width', 1).attr('opacity', 1).attr('d', areaAct); // add title
 
     svg.append('text').text(thisCountry).attr('class', 'title').attr('x', width / 2) // in the center
     .attr('text-anchor', 'middle') // center aligned
@@ -35020,92 +35019,102 @@ function ready(datapoints) {
           };
         })
       };
-    }); // const mouseG = svg.append("g")
-    //   .attr("class", "mouse-over-effects")
-    // mouseG.append("path") // this is the vertical line to follow mouse
-    //   .attr("class", "mouse-line")
-    //   .style("stroke", "#C8E9FE")
-    //   .style("stroke-width", "1px")
-    //   .style("opacity", "0")
-    // const areas = document.getElementsByClassName('area')
-    // const mousePerArea = mouseG.selectAll('.mouse-per-area')
-    //   .data(recActData)
-    //   .enter()
-    //   .append("g")
-    //   .attr("class", "mouse-per-area");
-    // mousePerArea.append("circle")
-    //   .attr('r', 6)
-    //   .attr('class', 'mouse-circle')
-    //   .attr('opacity', 0)
-    //   .attr('fill', 'white')
-    //   .attr('stroke', 'grey')
-    //   .attr('stroke-width', 2)
-    // mousePerArea.append("text")
-    //   .attr("transform", "translate(10,3)");
-    // mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
-    //   .attr('width', width) // can't catch mouse events on a g element
-    //   .attr('height', height)
-    //   .attr('fill', 'none')
-    //   .attr('pointer-events', 'all')
-    //   .on('mouseout', function() { // on mouse out hide line, circles and text
-    //     d3.select(".mouse-line")
-    //       .style("opacity", "0");
-    //     d3.selectAll(".mouse-per-area circle")
-    //       .style("opacity", "0");
-    //     d3.selectAll(".mouse-per-area text")
-    //       .style("opacity", "0");
-    //     // tip.hide(this)
-    //   })
-    //   .on('mouseover', function() { // on mouse in show line, circles and text
-    //     d3.select(".mouse-line")
-    //       .style("opacity", "1");
-    //     d3.selectAll(".mouse-per-area circle")
-    //       .style("opacity", "1");
-    //     d3.selectAll(".mouse-per-area text")
-    //       .style("opacity", "1");
-    //   })
-    //   .on('mousemove', function(f) { // mouse moving over canvas
-    //     let mouse = d3.mouse(this);
-    //     d3.select(".mouse-line")
-    //       .attr("d", function() {
-    //         let d = "M" + mouse[0] + "," + height;
-    //         d += " " + mouse[0] + "," + 0;
-    //         console.log(d)
-    //         return d;
-    //       })
-    //       d3.selectAll(".mouse-per-area")
-    //         .attr("transform", function(d, i) {
-    //           // console.log(width/mouse[0])
-    //           let xDate = xPositionScale.invert(mouse[0]), // gives the date associated with the position value
-    //               bisect = d3.bisector(function(d) { return d.datetime; }).right,
-    //               idx = bisect(d.values, xDate);
-    //           console.log("date", xDate)
-    //           // console.log("d.values", d.values)
-    //           console.log("idx", idx)
-    //           console.log("i", i)
-    //           console.log("areas[i]", areas[i])
-    //           let beginning = 0,
-    //               end = areas[i].getTotalLength(),
-    //               target = null;
-    //           console.log("beginning", beginning)
-    //           console.log("end", end)
-    //           console.log("target", target)
-    //           while (true){
-    //             target = Math.floor((beginning + end) / 2);
-    //             console.log()
-    //             let pos = areas[i].getPointAtLength(target);
-    //             if ((target === end || target === beginning) && pos.x !== mouse[0]) {
-    //                 break;
-    //             }
-    //             if (pos.x > mouse[0])      end = target;
-    //             else if (pos.x < mouse[0]) beginning = target;
-    //             else break; //position found
-    //           }
-    //           d3.select(this).select('text')
-    //             .text(yPositionScale.invert(pos.y).toFixed(2));
-    //           return "translate(" + mouse[0] + "," + pos.y +")";
-    //         })
-    //   })
+    }); // create mouse-over object
+
+    var mouseG = svg.append("g").attr("class", "mouse-over-effects");
+    mouseG.append("path") // this is the vertical line to follow mouse
+    .attr("class", "mouse-line").style("stroke", "#C8E9FE").style("stroke-width", "1px").style("opacity", "0");
+    var areas = document.getElementsByClassName('area');
+    var mousePerArea = mouseG.selectAll('.mouse-per-area').data(recActData).enter().append("g").attr("class", "mouse-per-area");
+    mousePerArea.append("circle").attr('r', 6).attr('class', 'mouse-circle').attr('opacity', 0).attr('fill', 'white').attr('stroke', 'grey').attr('stroke-width', 2);
+    mousePerArea.append("text").attr("transform", "translate(10,3)"); // 
+
+    mouseG.append('svg:rect') // append a rect to catch mouse movements on canvas
+    .attr('width', width) // can't catch mouse events on a g element
+    .attr('height', height).attr('fill', 'none').attr('pointer-events', 'all').on('mouseout', function () {
+      // on mouse out hide line, circles and text
+      d3.select(".mouse-line").style("opacity", "0");
+      d3.selectAll(".mouse-per-area circle").style("opacity", "0");
+      d3.selectAll(".mouse-per-area text").style("opacity", "0");
+      tip.hide();
+    }).on('mouseover', function () {
+      // on mouse in show line, circles and text
+      d3.select(".mouse-line").style("opacity", "1");
+      d3.selectAll(".mouse-per-area circle").style("opacity", "1");
+      d3.selectAll(".mouse-per-area text").style("opacity", "1");
+    }).on('mousemove', function (f) {
+      // mouse moving over canvas
+      var mouse = d3.mouse(this);
+      console.log(mouse);
+      d3.select(".mouse-line").attr("d", function () {
+        var d = "M" + mouse[0] + "," + height;
+        d += " " + mouse[0] + "," + 0;
+        console.log(d);
+        return d; // specifies the path of the vertical line
+      }); // the following code specifies where the y-coordinates are
+      // we know where the x-coordinate is-- it's just wherever you've moused-over
+      // but the y-coordinates are the ones that correspond to this x-value
+      // so we have to find the x-y coords ALONG THE PATHS that correspond with where the mouse is
+
+      var thisDate = null;
+      var thisRecovered = null;
+      var thisActive = null;
+      d3.selectAll(".mouse-per-area").attr("transform", function (d, i) {
+        // the i values are for each path
+        // console.log(width/mouse[0])
+        thisDate = xPositionScale.invert(mouse[0]); // gives the date associated with the position value
+        // bisect = d3.bisector(function(d) { return d.datetime; }).right,
+        // idx = bisect(d.values, xDate);
+        // console.log("date", xDate)
+        // console.log("d.values", d.values)
+        // console.log("idx", idx)
+        // console.log("i", i)
+        // console.log("areas[i]", areas[i])
+
+        var beginning = 0,
+            end = areas[i].getTotalLength(),
+            // length of path in pixels
+        target = null;
+        var pos = null; // initialize a coordinate value
+        // console.log("beginning", beginning)
+        // console.log("end", end)
+
+        while (true) {
+          // go on an iterative quest to find the x-y coords?
+          target = Math.floor((beginning + end) / 2); // start with the midpoint of the path
+
+          pos = areas[i].getPointAtLength(target); // set coordinates at the point along the path corresponding to the target
+
+          console.log("target", target);
+
+          if ((target === end || target === beginning) && pos.x !== mouse[0]) {
+            break;
+          }
+
+          if (pos.x > mouse[0]) end = target; // if the x-coord is greater than where the mouse is, move the end back to where you are
+          else if (pos.x < mouse[0]) beginning = target; // if the x-coord is less than where the mouse is, move the beginning up to where you are
+            // if you haven't found it yet, loop again.
+            else break; //position found
+        }
+
+        console.log(pos); // print the final position
+
+        if (i === 0) thisRecovered = yPositionScale.invert(pos.y); // assign recovered value
+        else if (i === 1) thisActive = yPositionScale.invert(pos.y); // show text next to circle
+
+        d3.select(this).select('text').text(d3.format(",")(yPositionScale.invert(pos.y).toFixed(0)));
+        console.log("DONE");
+        return "translate(" + mouse[0] + "," + pos.y + ")";
+      }); // make the object to feed to the tip
+
+      var thisPoint = {
+        'datetime': thisDate,
+        'Recovered': thisRecovered,
+        'Active': thisActive
+      }; // display the tooltip
+
+      tip.show(thisPoint, this);
+    }); // create axes
 
     var xAxis = d3.axisBottom(xPositionScale).ticks(8).tickFormat(d3.timeFormat('%m/%d')); // .tickSize(-height)
 
@@ -35168,5 +35177,5 @@ function ready(datapoints) {
 
   reRender();
 }
-},{"d3":"../node_modules/d3/index.js","d3-tip":"../node_modules/d3-tip/index.js","d3-svg-annotation":"../node_modules/d3-svg-annotation/indexRollupNext.js"}]},{},["scripts/chart-rec-act.js"], null)
+},{"d3":"../node_modules/d3/index.js","d3-tip":"../node_modules/d3-tip/index.js","d3-svg-annotation":"../node_modules/d3-svg-annotation/indexRollupNext.js","../data/all.csv":"data/all.csv"}]},{},["scripts/chart-rec-act.js"], null)
 //# sourceMappingURL=/chart-rec-act.345543be.js.map

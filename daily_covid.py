@@ -14,7 +14,9 @@ dates = [date.strftime("%m-%d-%Y") for date in dates]
 
 url = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/" 
 countries = ['Azerbaijan','Armenia','Georgia','Kazakhstan','Uzbekistan','Kyrgyzstan','Turkmenistan','Tajikistan']
+# lately, they've been using these column names
 columns_later = ['Country_Region','Confirmed','Deaths','Recovered','Active']
+# earlier on they were using these
 columns_earlier = ['Country/Region','Confirmed','Deaths','Recovered']
 
 df_master = pd.DataFrame()
@@ -23,8 +25,10 @@ for date in dates:
     print(date)
     url_date = url + str(date) + ".csv"
     df_daily = pd.read_csv(url_date)
+    #first try the format that has predominated lately
     try:
         df_daily = df_daily[df_daily['Country_Region'].isin(countries)][columns_later]
+    # otherwise use the older one, and rename the columns to match the current convention
     except:
         df_daily = df_daily[df_daily['Country/Region'].isin(countries)][columns_earlier]
         df_daily.rename({'Country/Region':'Country_Region'},axis=1,inplace=True)
@@ -58,10 +62,12 @@ since_100_7 = since_100.groupby('Country_Region').rolling(window=7,on='Date')['C
 since_100_7.rename({'Confirmed_change':'Confirmed_change_7day'},axis=1,inplace=True)
 since_100 = since_100.merge(since_100_7,on=['Country_Region','Date'])
 
-# save to csvs
+# save to csvs and jsons
 path = 'src/data/'
 df_master.to_csv(path + 'all.csv')
 since_100.to_csv(path + 'since.csv')
+df_master.to_json(path + 'all.json')
+since_100.to_json(path + 'since.json')
 
 import boto3
 from botocore.exceptions import NoCredentialsError
@@ -81,8 +87,10 @@ def upload_to_aws(local_file, bucket, s3_file):
         return False
 
 
-uploaded_all = upload_to_aws('src/data/all.csv', 'eurasianet', 'all.csv')
-uploaded_since = upload_to_aws('src/data/since.csv', 'eurasianet', 'since.csv')
+uploaded_all_csv = upload_to_aws('src/data/all.csv', 'eurasianet', 'all.csv')
+uploaded_since_csv = upload_to_aws('src/data/since.csv', 'eurasianet', 'since.csv')
+uploaded_all_json = upload_to_aws('src/data/all.json', 'eurasianet', 'all.json')
+uploaded_all_json = upload_to_aws('src/data/since.json', 'eurasianet', 'since.json')
 
 # deprecated for site build
 
