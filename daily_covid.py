@@ -71,9 +71,11 @@ since_100.to_csv(path + 'since.csv')
 # reshape for Infogram-friendly json
 # convert date column to string first
 to_convert = {'Date': str}
-# rewrite as list
-all_list = df_master.astype(to_convert).T.reset_index().values.T.tolist()
-since_list = since_100.astype(to_convert).T.reset_index().values.T.tolist()
+# rewrite as three-level lists, since Infogram seems to want that
+master_list = []
+master_list.append(df_master.astype(to_convert).T.reset_index().values.T.tolist())
+since_list = []
+since_list.append(since_100.astype(to_convert).T.reset_index().values.T.tolist())
 
 # save as json
 with open(path + 'all.json', 'w') as outfile:
