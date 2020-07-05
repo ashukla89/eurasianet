@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import json
 
 import datetime as dt
 
@@ -62,12 +63,23 @@ since_100_7 = since_100.groupby('Country_Region').rolling(window=7,on='Date')['C
 since_100_7.rename({'Confirmed_change':'Confirmed_change_7day'},axis=1,inplace=True)
 since_100 = since_100.merge(since_100_7,on=['Country_Region','Date'])
 
-# save to csvs and jsons
+# save to csvs
 path = 'src/data/'
 df_master.to_csv(path + 'all.csv')
 since_100.to_csv(path + 'since.csv')
-df_master.to_json(path + 'all.json')
-since_100.to_json(path + 'since.json')
+
+# reshape for Infogram-friendly json
+# convert date column to string first
+to_convert = {'Date': str}
+# rewrite as list
+all_list = df_master.astype(to_convert).T.reset_index().values.T.tolist()
+since_list = since_100.astype(to_convert).T.reset_index().values.T.tolist()
+
+# save as json
+with open(path + 'all.json', 'w') as outfile:
+    json.dump(all_list, outfile)
+with open(path + 'since.json', 'w') as outfile:
+    json.dump(since_list, outfile)
 
 import boto3
 from botocore.exceptions import NoCredentialsError
