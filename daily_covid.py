@@ -72,8 +72,8 @@ since_100.to_csv(path + 'since.csv')
 # convert date column to string first
 to_convert = {'Date': str}
 # rewrite as three-level lists, since Infogram seems to want that
-master_list = []
-master_list.append(df_master.astype(to_convert).T.reset_index().values.T.tolist())
+all_list = []
+all_list.append(df_master.astype(to_convert).T.reset_index().values.T.tolist())
 since_list = []
 since_list.append(since_100.astype(to_convert).T.reset_index().values.T.tolist())
 
