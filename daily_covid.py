@@ -80,7 +80,7 @@ to_convert = {'Date': str}
 master_list = []
 master_list.append(df_cases.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist())
 master_list.append(df_deaths.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist())
-master_list.append(df_since_7.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist())
+master_list.append(df_since_7.fillna(0).round(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist())
 
 # save as json
 with open(path + 'all.json', 'w') as outfile:
