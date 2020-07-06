@@ -84,7 +84,7 @@ master_list.append(df_since_7.fillna(0).reset_index().astype(to_convert).T.reset
 
 # save as json
 with open(path + 'all.json', 'w') as outfile:
-    json.dump(all_list, outfile)
+    json.dump(master_list, outfile)
 
 import boto3
 from botocore.exceptions import NoCredentialsError
