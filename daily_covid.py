@@ -68,20 +68,23 @@ path = 'src/data/'
 df_master.to_csv(path + 'all.csv')
 since_100.to_csv(path + 'since.csv')
 
-# reshape for Infogram-friendly json
+
+###### reshape for Infogram-friendly json ######
+# shape into Infogram-friendly format
+df_cases = df_master.pivot_table(index='Date',columns='Country_Region',values='Confirmed',aggfunc='sum')
+df_deaths = df_master.pivot_table(index='Date',columns='Country_Region',values='Deaths',aggfunc='sum')
+df_since_7 = since_100.pivot_table(index='Date',columns='Country_Region',values='Confirmed_change_7day')
 # convert date column to string first
 to_convert = {'Date': str}
-# rewrite as three-level lists, since Infogram seems to want that
-all_list = []
-all_list.append(df_master.astype(to_convert).T.reset_index().values.T.tolist())
-since_list = []
-since_list.append(since_100.astype(to_convert).T.reset_index().values.T.tolist())
+# rewrite as three-level lists, since Infogram seems to want that for sheets
+master_list = []
+master_list.append(df_cases.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist())
+master_list.append(df_deaths.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist())
+master_list.append(df_since_7.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist())
 
 # save as json
 with open(path + 'all.json', 'w') as outfile:
     json.dump(all_list, outfile)
-with open(path + 'since.json', 'w') as outfile:
-    json.dump(since_list, outfile)
 
 import boto3
 from botocore.exceptions import NoCredentialsError
@@ -104,7 +107,6 @@ def upload_to_aws(local_file, bucket, s3_file):
 uploaded_all_csv = upload_to_aws('src/data/all.csv', 'eurasianet', 'all.csv')
 uploaded_since_csv = upload_to_aws('src/data/since.csv', 'eurasianet', 'since.csv')
 uploaded_all_json = upload_to_aws('src/data/all.json', 'eurasianet', 'all.json')
-uploaded_all_json = upload_to_aws('src/data/since.json', 'eurasianet', 'since.json')
 
 # deprecated for site build
 
