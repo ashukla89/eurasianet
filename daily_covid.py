@@ -76,6 +76,10 @@ df_deaths = df_master.pivot_table(index='Date',columns='Country_Region',values='
 df_since_7 = since_100.pivot_table(index='Date',columns='Country_Region',values='Confirmed_change_7day')
 # convert date column to string first
 to_convert = {'Date': str}
+# rename date column so that Infogram names the sheets accordingly
+df_cases.index.rename('Cases',inplace=True)
+df_deaths.index.rename('Deaths',inplace=True)
+df_since_7.index.rename('New Cases, 7-day Average',inplace=True)
 # rewrite as three-level lists, since Infogram seems to want that for sheets
 master_list = []
 master_list.append(df_cases.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist())
