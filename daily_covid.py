@@ -76,15 +76,16 @@ df_deaths = df_master.pivot_table(index='Date',columns='Country_Region',values='
 df_since_7 = since_100.pivot_table(index='Date',columns='Country_Region',values='Confirmed_change_7day')
 # convert date column to string first
 to_convert = {'Date': str}
-# rename date column so that Infogram names the sheets accordingly
-df_cases.index.rename('Cases',inplace=True)
-df_deaths.index.rename('Deaths',inplace=True)
-df_since_7.index.rename('New Cases, 7-day Average',inplace=True)
 # rewrite as three-level lists, since Infogram seems to want that for sheets
-master_list = []
-master_list.append(df_cases.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist())
-master_list.append(df_deaths.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist())
-master_list.append(df_since_7.fillna(0).round(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist())
+list_cases = df_cases.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
+list_deaths = df_deaths.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
+list_since_7 = df_since_7.fillna(0).round(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
+# rename the first element so Infogram reads that as the sheet name
+list_cases[0][0] = 'Cases'
+list_deaths[0][0] = 'Deaths'
+list_since_7[0][0] = 'New Cases, 7-Day Average'
+# put them all together into a master list
+master_list = [list_cases,list_deaths,list_since_7]
 
 # save as json
 with open(path + 'all.json', 'w') as outfile:
