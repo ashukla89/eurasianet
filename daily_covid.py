@@ -74,22 +74,42 @@ since_100.to_csv(path + 'since.csv')
 df_cases = df_master.pivot_table(index='Date',columns='Country_Region',values='Confirmed',aggfunc='sum')
 df_deaths = df_master.pivot_table(index='Date',columns='Country_Region',values='Deaths',aggfunc='sum')
 df_since_7 = since_100.pivot_table(index='Date',columns='Country_Region',values='Confirmed_change_7day')
+# subset for Georgia alone
+df_ga_cases = df_cases['Georgia']
+df_ga_deaths = df_deaths['Georgia']
+df_ga_since_7 = df_since_7['Georgia']
+
 # convert date column to string first
 to_convert = {'Date': str}
 # rewrite as three-level lists, since Infogram seems to want that for sheets
 list_cases = df_cases.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
 list_deaths = df_deaths.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
 list_since_7 = df_since_7.fillna(0).round(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
+# subset for Georgia
+list_ga_cases = df_ga_cases.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
+list_ga_deaths = df_ga_deaths.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
+list_ga_since_7 = df_ga_since_7.fillna(0).round(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
+
 # rename the first element so Infogram reads that as the sheet name
 list_cases[0][0] = 'Cases'
 list_deaths[0][0] = 'Deaths'
 list_since_7[0][0] = 'New Cases, 7-Day Average'
+# subset for Georgia
+list_ga_cases[0][0] = 'Cases'
+list_ga_deaths[0][0] = 'Deaths'
+list_ga_since_7[0][0] = 'New Cases, 7-Day Average'
+
 # put them all together into a master list
 master_list = [list_cases,list_deaths,list_since_7]
+# and georgia too, reordered per David
+ga_list = [list_ga_since_7,list_ga_cases,list_ga_deaths]
 
 # save as json
 with open(path + 'all.json', 'w') as outfile:
     json.dump(master_list, outfile)
+# and georgia too
+with open(path + 'ga.json', 'w') as outfile:
+    json.dump(ga_list, outfile)
 
 import boto3
 from botocore.exceptions import NoCredentialsError
@@ -112,6 +132,7 @@ def upload_to_aws(local_file, bucket, s3_file):
 uploaded_all_csv = upload_to_aws('src/data/all.csv', 'eurasianet', 'all.csv')
 uploaded_since_csv = upload_to_aws('src/data/since.csv', 'eurasianet', 'since.csv')
 uploaded_all_json = upload_to_aws('src/data/all.json', 'eurasianet', 'all.json')
+uploaded_ga_json = upload_to_aws('src/data/ga.json', 'eurasianet', 'ga.json')
 
 # deprecated for site build
 
