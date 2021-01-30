@@ -78,6 +78,10 @@ df_since_7 = since_100.pivot_table(index='Date',columns='Country_Region',values=
 df_ga_cases = df_cases['Georgia']
 df_ga_deaths = df_deaths['Georgia']
 df_ga_since_7 = df_since_7['Georgia']
+# subset for Caucasus
+df_cauc_cases = df_cases[['Georgia','Armenia','Azerbaijan']]
+df_cauc_deaths = df_deaths[['Georgia','Armenia','Azerbaijan']]
+df_cauc_since_7 = df_since_7[['Georgia','Armenia','Azerbaijan']]
 
 # convert date column to string first
 to_convert = {'Date': str}
@@ -89,6 +93,10 @@ list_since_7 = df_since_7.fillna(0).round(0).reset_index().astype(to_convert).T.
 list_ga_cases = df_ga_cases.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
 list_ga_deaths = df_ga_deaths.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
 list_ga_since_7 = df_ga_since_7.fillna(0).round(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
+# subset for Caucasus
+list_cauc_cases = df_cauc_cases.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
+list_cauc_deaths = df_cauc_deaths.fillna(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
+list_cauc_since_7 = df_cauc_since_7.fillna(0).round(0).reset_index().astype(to_convert).T.reset_index().T.values.tolist()
 
 # rename the first element so Infogram reads that as the sheet name
 list_cases[0][0] = 'Cases'
@@ -98,11 +106,17 @@ list_since_7[0][0] = 'New Cases, 7-Day Average'
 list_ga_cases[0][0] = 'Cases'
 list_ga_deaths[0][0] = 'Deaths'
 list_ga_since_7[0][0] = 'New Cases, 7-Day Average'
+# subset for Caucausus
+list_cauc_cases[0][0] = 'Cases'
+list_cauc_deaths[0][0] = 'Deaths'
+list_cauc_since_7[0][0] = 'New Cases, 7-Day Average'
 
 # put them all together into a master list
 master_list = [list_cases,list_deaths,list_since_7]
 # and georgia too, reordered per David
 ga_list = [list_ga_since_7,list_ga_cases,list_ga_deaths]
+# and caucasus too, reordered per David
+cauc_list = [list_cauc_since_7,list_cauc_cases,list_cauc_deaths]
 
 # save as json
 with open(path + 'all.json', 'w') as outfile:
@@ -110,6 +124,10 @@ with open(path + 'all.json', 'w') as outfile:
 # and georgia too
 with open(path + 'ga.json', 'w') as outfile:
     json.dump(ga_list, outfile)
+# and caucasus too
+with open(path + 'cauc.json', 'w') as outfile:
+    json.dump(cauc_list, outfile)
+
 
 import boto3
 from botocore.exceptions import NoCredentialsError
@@ -133,6 +151,8 @@ uploaded_all_csv = upload_to_aws('src/data/all.csv', 'eurasianet', 'all.csv')
 uploaded_since_csv = upload_to_aws('src/data/since.csv', 'eurasianet', 'since.csv')
 uploaded_all_json = upload_to_aws('src/data/all.json', 'eurasianet', 'all.json')
 uploaded_ga_json = upload_to_aws('src/data/ga.json', 'eurasianet', 'ga.json')
+uploaded_cauc_json = upload_to_aws('src/data/cauc.json', 'eurasianet', 'cauc.json')
+
 
 # deprecated for site build
 
